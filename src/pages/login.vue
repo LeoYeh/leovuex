@@ -1,6 +1,8 @@
 <template>
     <div id="login">
-        <img src="static/img/ironman2017.jpg" class="responsive-img">
+        <div style="text-align: center;">
+            <img src="static/img/logo1.jpg" class="">
+        </div>
         <div class="container">
             <div class="form-signin">
                 <h2 class="form-signin-heading">Please sign in</h2>
@@ -23,31 +25,35 @@ import {
 } from 'vuex'
 
 export default {
-    data() {
+    mounted() {
+            // console.log('reset toekn')
+            this.actReset();
+        },
+        data() {
             return {
                 email: 'leo@iprefer.com.tw',
                 password: '123',
             }
         },
         methods: {
-            // 因為 action 包裝了 Promise 所以可以使用 then 和 catch 來接收非同步回傳狀態
+            ...mapActions([
+                'setUserName',
+                'actReset',
+            ]),
             login() {
+                //呼叫 root action 寫法一 => 不推
                 this.$store.dispatch('actionLogin', {
                         email: this.email,
                         password: this.password
                     })
                     .then(() => {
-                        // 使用 $router.push 轉跳到 hello Page
-                        console.log('3. get Promise resolve');
-                        setTimeout(() => {
-                            console.log(this.$router)
-                            this.$router.push('/hello');
-                            // location.href = `${window.location.hostname}/hello`;
-                            console.log(`${window.location.hostname}/hello`)
-                        }, 1000);
+                        //呼叫 root action 寫法二
+                        this.setUserName(this.email.split("@")[0]);
+                        this.$router.push('/tmpl');
                     })
-                    .catch(() => {
-                        console.log('error get Promise reject!');
+                    .catch((err) => {
+                        // console.log('error get Promise reject!');
+                        alert(err);
                     });
             }
         }

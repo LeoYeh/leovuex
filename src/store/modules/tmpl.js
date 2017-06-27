@@ -5,7 +5,8 @@ const types = {
 }
 
 const state = {
-    count: 0
+    count: 1,
+    aa: 'aa',
 }
 
 const getters = {
@@ -28,7 +29,7 @@ const actions = {
 // 同步
 const mutations = {
     [types.INCREASE](state, num) {
-        state.count += num;
+        state.count += parseInt(num);
         console.log('newINCREASE', num, 'state?', state.count);
     },
     [types.DECREASE](state, num) {

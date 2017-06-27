@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 // root page
 import App from './App.vue';
 // page
+import jumbotron from './pages/jumbotron.vue';
 import tmpl from './pages/tmpl.vue';
 import login from './pages/login.vue';
 
@@ -19,11 +20,18 @@ const router = new VueRouter({
     base: (isProduction) ? require('path').resolve(__dirname, '../denstu/ideashare') : __dirname,
     // routre 表
     routes: [{
+            path: '/jumbotron',
+            name: 'jumbotron',
+            component: jumbotron,
+            meta: {
+                requiresAuth: true
+            }
+        }, {
             path: '/tmpl',
             name: 'tmpl',
             component: tmpl,
             meta: {
-                requiresAuth: false
+                requiresAuth: true
             }
         }, {
             path: '/login',
@@ -37,29 +45,25 @@ const router = new VueRouter({
         // 順序一定要最後面
         {
             path: '/*',
-            redirect: '/tmpl'
+            redirect: '/login'
         }
     ]
 });
 
 // 頁面轉跳驗證
-/*
+
 router.beforeEach((to, from, next) => {
     // 如果 router 轉跳的頁面需要驗證 requiresAuth: true
     // console.log('=====> ', JSON.stringify(to));
-    // console.log('to=', to.fullPath, '| from=', from.fullPath);
-    if (to.matched.some(record => {
-            // console.log(record.name, record.meta.requiresAuth);
+    //前往頁面的 router 資料 type: array
+    let routerInfo = to.matched;
+    if (routerInfo.some(record => {
             return record.meta.requiresAuth;
         })) {
-        // 如果沒有 token 
-        // console.log(JSON.stringify(store.state))
-        // console.log('token?', store.state.token);
+        // 取得全域 store.state
         if (!store.state.token) {
             // 轉跳到 login page
-            next({
-                path: '/login'
-            });
+            next({ path: '/login' });
         } else {
             next(); // 往下繼續執行
         }
@@ -67,7 +71,7 @@ router.beforeEach((to, from, next) => {
         next(); // 往下繼續執行
     }
 });
-*/
+
 
 new Vue({
     el: '#app',
